@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark"><head>
+  <script type="module" src="/@vite/client"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>賽博木魚 x 今天吃什麼隨機老虎機 | 現代暗黑科技紓壓決策網頁</title>
+  <meta name="description" content="結合賽博線上木魚與今天吃什麼美食老虎機隨機決定器的二合一紓壓神器。現代暗黑科技風、支援加權天氣過濾器與純前端音效。">
+  <meta property="og:title" content="賽博木魚 x 今天吃什麼隨機老虎機">
+  <meta property="og:description" content="功德無量，吃啥由命！賽博木魚積累功德，美食老虎機解決選擇障礙。">
+
+  <!-- 引入 Google Fonts: Orbitron (科技數字字型) 與 Noto Sans TC (思源黑體) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&amp;family=Orbitron:wght@600;800;900&amp;display=swap" rel="stylesheet">
+
+  <!-- 引入 Tailwind CSS CDN，確保上傳至 GitHub Pages 或本機直接雙擊開啟時皆能完美排版 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              bg: '#08090d',
+              card: '#10131d',
+              cardGlow: '#171b29',
+              border: 'rgba(0, 242, 255, 0.2)',
+              cyan: '#00f2ff',
+              gold: '#fbbf24',
+              goldGlow: '#f59e0b',
+              purple: '#8b5cf6',
+              rain: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            tech: ['Orbitron', 'monospace'],
+            sans: ['Noto Sans TC', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- 自訂 CSS 樣式表：科技風霓虹發光、木魚震動動畫、老虎機滾輪物理效果與浮動字體 -->
+  <style>
+    /* 全域重設與背景科技光暈網格 */
+    body {
+      background-color: #08090d;
+      color: #e2e8f0;
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(0, 242, 255, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    }
+
+    /* 科技感文字發光特效 */
+    .glow-cyan {
+      text-shadow: 0 0 10px rgba(0, 242, 255, 0.6), 0 0 20px rgba(0, 242, 255, 0.3);
+    }
+    .glow-gold {
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.7), 0 0 25px rgba(245, 158, 11, 0.4);
+    }
+    .box-glow-cyan {
+      box-shadow: 0 0 25px rgba(0, 242, 255, 0.15), inset 0 0 15px rgba(0, 242, 255, 0.05);
+    }
+    .box-glow-gold {
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.15), inset 0 0 15px rgba(251, 191, 36, 0.05);
+    }
+
+    /* 木魚被敲擊時的縮放與彈性反饋動畫 */
+    .muyu-active {
+      animation: muyuHit 0.12s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+    @keyframes muyuHit {
+      0% { transform: scale(1); }
+      40% { transform: scale(0.91) rotate(-2deg); filter: brightness(1.3); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* 點擊木魚時浮出的「功德 +1」半透明金色文字淡出飄升動畫 */
+    .floating-merit {
+      position: absolute;
+      pointer-events: none;
+      font-weight: 700;
+      color: #fbbf24;
+      text-shadow: 0 0 12px rgba(251, 191, 36, 0.8), 0 0 24px rgba(245, 158, 11, 0.5);
+      animation: floatUpFade 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+      z-index: 50;
+      white-space: nowrap;
+      user-select: none;
+    }
+    @keyframes floatUpFade {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.85);
+      }
+      20% {
+        opacity: 1;
+        transform: translateY(-15px) scale(1.15);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-85px) scale(1);
+      }
+    }
+
+    /* 老虎機視窗的透視與遮罩陰影 (打造 3D 滾筒景深) */
+    .slot-viewport {
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+      perspective: 1000px;
+      border-radius: 1rem;
+      background: radial-gradient(circle at center, #131722 0%, #0a0d14 100%);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 242, 255, 0.2);
+    }
+
+    /* 老虎機上下遮罩漸層：模擬滾筒頂部與底部的自然光影暗角 */
+    .slot-viewport::before,
+    .slot-viewport::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 42px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .slot-viewport::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(10, 13, 20, 0.95), rgba(10, 13, 20, 0));
+    }
+    .slot-viewport::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(10, 13, 20, 0.95), rgba(10, 13, 20, 0));
+    }
+
+    /* 老虎機中心命中線準星 */
+    .slot-crosshair {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 64px;
+      transform: translateY(-50%);
+      border-top: 1px dashed rgba(0, 242, 255, 0.4);
+      border-bottom: 1px dashed rgba(0, 242, 255, 0.4);
+      background: rgba(0, 242, 255, 0.03);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* 老虎機滾動條容器 */
+    .slot-reel {
+      will-change: transform;
+      transition: transform 0.1s linear;
+    }
+
+    /* 雨天開關啟用時的微光動態效果 */
+    .rain-indicator {
+      transition: all 0.3s ease;
+    }
+    .rain-active {
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+      border-color: rgba(56, 189, 248, 0.7);
+    }
+
+    /* 滾輪條美化 */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08090d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e2436;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f2ff;
+    }
+  </style>
+<script src="/_aistudio-iframe.js?v=6634132a"></script><script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@2.0.4"></script><style>.aistudio-hover-highlight { box-shadow: inset 0 0 0 0.5px white, inset 0 0 0 1.5px rgba(128,128,128,0.6) !important; }.aistudio-active-highlight { outline: 2px solid #87a9ff !important; outline-offset: -2px !important; box-shadow: 0 0 0 0.5px rgba(0,0,0,0.3), inset 0 0 0 0.5px rgba(0,0,0,0.3) !important; }.aistudio-generating-blur { filter: blur(5px) grayscale(100%) brightness(28%) !important; transition: filter 0.3s ease; }#aistudio-focus-mode-tag { position: absolute; display: none; align-items: center; gap: 4px; background: #87a9ff; border-radius: 12px; z-index: 10000; padding: 8px; color: #32302c; font-family: Inter, sans-serif; font-size: 14px; font-style: normal; font-weight: 500; line-height: 21px; pointer-events: none; }#aistudio-hover-mode-tag { position: absolute; display: none; align-items: center; gap: 4px; background: rgba(128,128,128,0.6); border-radius: 12px; z-index: 10000; padding: 8px; color: white; font-family: Inter, sans-serif; font-size: 14px; font-style: normal; font-weight: 500; line-height: 21px; pointer-events: none; }.aistudio-img-icon { display: none; vertical-align: middle; pointer-events: auto; cursor: pointer; }.aistudio-img-icon.visible { display: inline-flex; }#aistudio-focus-mode-tag .aistudio-img-icon { position: relative; width: 26px; height: 26px; background: #32302c; border-radius: 6px; margin: -4px -4px -4px 0; }#aistudio-focus-mode-tag .aistudio-img-icon::before { content: ""; position: absolute; top: 4px; left: 4px; width: 18px; height: 18px; background-color: white; -webkit-mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); mask-size: contain; mask-repeat: no-repeat; }#aistudio-hover-mode-tag .aistudio-img-icon { position: relative; width: 18px; height: 18px; margin-left: 4px; }#aistudio-hover-mode-tag .aistudio-img-icon::before { content: ""; position: absolute; top: 0; left: 0; width: 18px; height: 18px; background-color: white; -webkit-mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; mask-image: url("https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/edit_fix_auto/default/24px.svg"); mask-size: contain; mask-repeat: no-repeat; }#aistudio-focus-mode-tag .aistudio-img-icon:hover, #aistudio-hover-mode-tag .aistudio-img-icon:hover { background: #424242 !important; }#aistudio-focus-mode-tag .aistudio-img-icon:active, #aistudio-hover-mode-tag .aistudio-img-icon:active { background: #393f51 !important; }</style><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Noto Sans TC, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.inset-2{inset:0.5rem}.-bottom-24{bottom:-6rem}.-left-24{left:-6rem}.-right-24{right:-6rem}.-top-24{top:-6rem}.top-0{top:0px}.z-40{z-index:40}.z-50{z-index:50}.col-span-2{grid-column:span 2 / span 2}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:0.25rem;margin-bottom:0.25rem}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.my-4{margin-top:1rem;margin-bottom:1rem}.my-8{margin-top:2rem;margin-bottom:2rem}.mb-1{margin-bottom:0.25rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-12{margin-top:3rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.ml-1{margin-left:0.25rem}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-16{height:4rem}.h-2\.5{height:0.625rem}.h-48{height:12rem}.h-6{height:1.5rem}.h-64{height:16rem}.h-9{height:2.25rem}.h-\[140px\]{height:140px}.max-h-40{max-height:10rem}.max-h-60{max-height:15rem}.min-h-screen{min-height:100vh}.w-10{width:2.5rem}.w-12{width:3rem}.w-2\.5{width:0.625rem}.w-48{width:12rem}.w-64{width:16rem}.w-9{width:2.25rem}.w-full{width:100%}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-8{gap:2rem}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-amber-500\/20{border-color:rgb(245 158 11 / 0.2)}.border-amber-500\/30{border-color:rgb(245 158 11 / 0.3)}.border-amber-500\/40{border-color:rgb(245 158 11 / 0.4)}.border-blue-400\/20{border-color:rgb(96 165 250 / 0.2)}.border-blue-400\/30{border-color:rgb(96 165 250 / 0.3)}.border-cyan-500\/30{border-color:rgb(6 182 212 / 0.3)}.border-cyan-500\/40{border-color:rgb(6 182 212 / 0.4)}.border-cyber-border{border-color:rgba(0, 242, 255, 0.2)}.border-cyber-border\/40{border-color:rgba(0, 242, 255, 0.4)}.border-cyber-cyan\/30{border-color:rgb(0 242 255 / 0.3)}.border-cyber-cyan\/40{border-color:rgb(0 242 255 / 0.4)}.border-cyber-cyan\/50{border-color:rgb(0 242 255 / 0.5)}.border-purple-500\/40{border-color:rgb(168 85 247 / 0.4)}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-700\/60{border-color:rgb(51 65 85 / 0.6)}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-slate-800\/80{border-color:rgb(30 41 59 / 0.8)}.border-slate-700\/80{border-color:rgb(51 65 85 / 0.8)}.bg-amber-400{--tw-bg-opacity:1;background-color:rgb(251 191 36 / var(--tw-bg-opacity, 1))}.bg-amber-500\/10{background-color:rgb(245 158 11 / 0.1)}.bg-amber-500\/5{background-color:rgb(245 158 11 / 0.05)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-blue-500\/10{background-color:rgb(59 130 246 / 0.1)}.bg-blue-500\/20{background-color:rgb(59 130 246 / 0.2)}.bg-cyan-400{--tw-bg-opacity:1;background-color:rgb(34 211 238 / var(--tw-bg-opacity, 1))}.bg-cyan-500\/10{background-color:rgb(6 182 212 / 0.1)}.bg-cyan-500\/5{background-color:rgb(6 182 212 / 0.05)}.bg-cyan-950\/20{background-color:rgb(8 51 68 / 0.2)}.bg-cyber-bg\/80{background-color:rgb(8 9 13 / 0.8)}.bg-cyber-card{--tw-bg-opacity:1;background-color:rgb(16 19 29 / var(--tw-bg-opacity, 1))}.bg-cyber-card\/90{background-color:rgb(16 19 29 / 0.9)}.bg-cyber-cyan{--tw-bg-opacity:1;background-color:rgb(0 242 255 / var(--tw-bg-opacity, 1))}.bg-cyber-cyan\/10{background-color:rgb(0 242 255 / 0.1)}.bg-purple-950\/20{background-color:rgb(59 7 100 / 0.2)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/40{background-color:rgb(15 23 42 / 0.4)}.bg-slate-900\/50{background-color:rgb(15 23 42 / 0.5)}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-amber-500\/10{--tw-gradient-from:rgb(245 158 11 / 0.1) var(--tw-gradient-from-position);--tw-gradient-to:rgb(245 158 11 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-amber-500\/20{--tw-gradient-from:rgb(245 158 11 / 0.2) var(--tw-gradient-from-position);--tw-gradient-to:rgb(245 158 11 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-cyan-500{--tw-gradient-from:#06b6d4 var(--tw-gradient-from-position);--tw-gradient-to:rgb(6 182 212 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-amber-400\/5{--tw-gradient-to:rgb(251 191 36 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), rgb(251 191 36 / 0.05) var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-blue-600{--tw-gradient-to:#2563eb var(--tw-gradient-to-position)}.to-cyan-500\/20{--tw-gradient-to:rgb(6 182 212 / 0.2) var(--tw-gradient-to-position)}.to-transparent{--tw-gradient-to:transparent var(--tw-gradient-to-position)}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-2{padding-bottom:0.5rem}.pr-1{padding-right:0.25rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.font-tech{font-family:Orbitron, monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-normal{font-weight:400}.uppercase{text-transform:uppercase}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-amber-200\/70{color:rgb(253 230 138 / 0.7)}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-blue-300{--tw-text-opacity:1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.text-cyan-300{--tw-text-opacity:1;color:rgb(103 232 249 / var(--tw-text-opacity, 1))}.text-cyan-400{--tw-text-opacity:1;color:rgb(34 211 238 / var(--tw-text-opacity, 1))}.text-cyber-cyan{--tw-text-opacity:1;color:rgb(0 242 255 / var(--tw-text-opacity, 1))}.text-purple-200\/70{color:rgb(233 213 255 / 0.7)}.text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254 / var(--tw-text-opacity, 1))}.text-rose-300{--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-950{--tw-text-opacity:1;color:rgb(2 6 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-400{--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.opacity-60{opacity:0.6}.shadow-\[0_0_25px_rgba\(0\2c 242\2c 255\2c 0\.4\)\]{--tw-shadow:0 0 25px rgba(0,242,255,0.4);--tw-shadow-colored:0 0 25px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.blur-3xl{--tw-blur:blur(64px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-md{--tw-blur:blur(12px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-\[0_10px_25px_rgba\(251\2c 191\2c 36\2c 0\.25\)\]{--tw-drop-shadow:drop-shadow(0 10px 25px rgba(251,191,36,0.25));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-100{transition-duration:100ms}.duration-300{transition-duration:300ms}.after\:absolute::after{content:var(--tw-content);position:absolute}.after\:left-\[2px\]::after{content:var(--tw-content);left:2px}.after\:top-\[2px\]::after{content:var(--tw-content);top:2px}.after\:h-5::after{content:var(--tw-content);height:1.25rem}.after\:w-5::after{content:var(--tw-content);width:1.25rem}.after\:rounded-full::after{content:var(--tw-content);border-radius:9999px}.after\:border::after{content:var(--tw-content);border-width:1px}.after\:border-slate-300::after{content:var(--tw-content);--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.after\:bg-slate-300::after{content:var(--tw-content);--tw-bg-opacity:1;background-color:rgb(203 213 225 / var(--tw-bg-opacity, 1))}.after\:transition-all::after{content:var(--tw-content);transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.after\:content-\[\'\'\]::after{--tw-content:'';content:var(--tw-content)}.hover\:border-amber-400\/50:hover{border-color:rgb(251 191 36 / 0.5)}.hover\:border-cyber-cyan\/50:hover{border-color:rgb(0 242 255 / 0.5)}.hover\:border-purple-400\/50:hover{border-color:rgb(192 132 252 / 0.5)}.hover\:border-rose-400\/50:hover{border-color:rgb(251 113 133 / 0.5)}.hover\:border-cyber-cyan\/40:hover{border-color:rgb(0 242 255 / 0.4)}.hover\:bg-amber-500\/20:hover{background-color:rgb(245 158 11 / 0.2)}.hover\:bg-cyan-300:hover{--tw-bg-opacity:1;background-color:rgb(103 232 249 / var(--tw-bg-opacity, 1))}.hover\:bg-cyan-500\/20:hover{background-color:rgb(6 182 212 / 0.2)}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800\/40:hover{background-color:rgb(30 41 59 / 0.4)}.hover\:from-cyan-400:hover{--tw-gradient-from:#22d3ee var(--tw-gradient-from-position);--tw-gradient-to:rgb(34 211 238 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:to-blue-500:hover{--tw-gradient-to:#3b82f6 var(--tw-gradient-to-position)}.hover\:text-cyber-cyan:hover{--tw-text-opacity:1;color:rgb(0 242 255 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:text-rose-400:hover{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.hover\:shadow-\[0_0_35px_rgba\(0\2c 242\2c 255\2c 0\.6\)\]:hover{--tw-shadow:0 0 35px rgba(0,242,255,0.6);--tw-shadow-colored:0 0 35px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-cyber-cyan:focus{--tw-border-opacity:1;border-color:rgb(0 242 255 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-\[0\.98\]:active{--tw-scale-x:0.98;--tw-scale-y:0.98;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:border-amber-400\/40{border-color:rgb(251 191 36 / 0.4)}.group:hover .group-hover\:drop-shadow-\[0_10px_35px_rgba\(251\2c 191\2c 36\2c 0\.4\)\]{--tw-drop-shadow:drop-shadow(0 10px 35px rgba(251,191,36,0.4));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.peer:checked ~ .peer-checked\:bg-cyber-rain{--tw-bg-opacity:1;background-color:rgb(56 189 248 / var(--tw-bg-opacity, 1))}.peer:checked ~ .peer-checked\:after\:translate-x-full::after{content:var(--tw-content);--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.peer:checked ~ .peer-checked\:after\:border-white::after{content:var(--tw-content);--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.peer:checked ~ .peer-checked\:after\:bg-white::after{content:var(--tw-content);--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.peer:focus ~ .peer-focus\:outline-none{outline:2px solid transparent;outline-offset:2px}@media (min-width: 640px){.sm\:col-span-1{grid-column:span 1 / span 1}.sm\:my-10{margin-top:2.5rem;margin-bottom:2.5rem}.sm\:inline-block{display:inline-block}.sm\:inline{display:inline}.sm\:h-56{height:14rem}.sm\:w-56{width:14rem}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:gap-3{gap:0.75rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-8{padding-top:2rem;padding-bottom:2rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-6xl{font-size:3.75rem;line-height:1}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width: 768px){.md\:block{display:block}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:px-8{padding-left:2rem;padding-right:2rem}}</style></head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- ==================== 頂部導航欄 (Top Bar) ==================== -->
+  <header class="border-b border-cyber-border/40 bg-cyber-bg/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- 品牌標題區域 -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-cyan-500/20 border border-cyber-cyan/30 flex items-center justify-center text-xl shadow-lg">
+          ⛩️
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <span>賽博迷信殿堂</span>
+            <span class="text-xs font-tech text-cyber-cyan font-normal px-2 py-0.5 rounded border border-cyber-cyan/30 bg-cyber-cyan/10 hidden sm:inline-block">v2.5 CYBER KARMA</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden md:block">左敲木魚積累功德 · 右啟轉輪決策美食</p>
+        </div>
+      </div>
+
+      <!-- 右側快捷操作群：音效開關、複製單檔程式碼、靈籤彈窗 -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 音效切換按鈕 -->
+        <button id="soundToggleBtn" onclick="toggleSound()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-700 bg-cyber-card hover:border-cyber-cyan/50 text-slate-200 transition-all cursor-pointer" title="切換音效">
+          <span id="soundIcon">🔊</span>
+          <span id="soundText" class="hidden sm:inline">音效：開啟</span>
+        </button>
+
+        <!-- 一鍵複製單檔代碼 (作業/GitHub Pages 部署好幫手) -->
+        <button onclick="copySingleFileSource()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition-all cursor-pointer" title="複製此網頁完整單一檔案程式碼">
+          <span>📋</span>
+          <span class="hidden sm:inline">複製單檔源碼</span>
+        </button>
+
+        <!-- 下載 index.html -->
+        <button onclick="downloadSingleFileHtml()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 transition-all cursor-pointer" title="下載 index.html 部署至 GitHub Pages">
+          <span>⬇️</span>
+          <span class="hidden sm:inline">下載 HTML</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== 主要內容區 (左右雙核心佈局) ==================== -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+      <!-- ========================================================= -->
+      <!-- 【左側區塊：功能一 賽博迷信線上木魚 (功德積累與運勢)】 -->
+      <!-- ========================================================= -->
+      <section class="rounded-2xl border border-amber-500/30 bg-cyber-card/90 backdrop-blur-sm p-6 sm:p-8 flex flex-col items-center relative overflow-hidden box-glow-gold">
+        
+        <!-- 背景裝飾蓮花光輪 -->
+        <div class="absolute -top-24 -left-24 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- 區塊標題與境界標籤 -->
+        <div class="w-full flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="text-xs font-bold tracking-wider uppercase text-amber-400">賽博功德堂 · CYBER TEMPLE</span>
+          </div>
+          <span id="rankBadge" class="text-xs px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-medium">稱號：賽博菩薩 · 功德圓滿</span>
+        </div>
+
+        <!-- 功德總量計數器 (核心數據統計) -->
+        <div class="text-center my-2">
+          <p class="text-xs uppercase tracking-widest text-slate-400 font-medium mb-1">當前功德總量 · MERIT COUNT</p>
+          <div class="flex items-baseline justify-center gap-2">
+            <span id="meritCountDisplay" class="font-tech text-5xl sm:text-6xl font-black text-amber-400 tracking-tight glow-gold tabular-nums">6,689</span>
+            <span class="text-amber-300 text-sm font-bold">點</span>
+          </div>
+          <p id="meritSubtitle" class="text-xs text-amber-200/70 mt-1">點擊木魚積累善果 · 消除世間煩惱 Bug</p>
+        </div>
+
+        <!-- 木魚核心互動區域 (精緻 SVG 木魚與浮動文字生成容器) -->
+        <div id="muyuContainer" class="relative my-8 sm:my-10 flex items-center justify-center select-none cursor-pointer">
+          
+          <!-- 敲擊木魚主體按鈕 -->
+          <button id="muyuButton" onclick="hitMuyu(event)" class="relative p-6 rounded-full group focus:outline-none transition-transform active:scale-95 cursor-pointer" aria-label="敲擊木魚">
+            
+            <!-- 科技光環底座 -->
+            <div class="absolute inset-2 rounded-full border border-amber-500/20 group-hover:border-amber-400/40 transition-colors animate-pulse"></div>
+            <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500/10 via-amber-400/5 to-transparent blur-md"></div>
+            
+            <!-- 精緻高質感 SVG 科技木魚圖示 (Cyber Wooden Fish) -->
+            <svg id="muyuSvg" class="w-48 h-48 sm:w-56 sm:h-56 transition-all duration-100 drop-shadow-[0_10px_25px_rgba(251,191,36,0.25)] group-hover:drop-shadow-[0_10px_35px_rgba(251,191,36,0.4)]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- 木魚漸層主色調：科技金屬與沉香木的融合感 -->
+                <radialGradient id="muyuBodyGrad" cx="40%" cy="35%" r="70%">
+                  <stop offset="0%" stop-color="#3d2a1d"></stop>
+                  <stop offset="60%" stop-color="#1f140d"></stop>
+                  <stop offset="100%" stop-color="#0e0906"></stop>
+                </radialGradient>
+                <linearGradient id="cyberCircuitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fbbf24"></stop>
+                  <stop offset="50%" stop-color="#f59e0b"></stop>
+                  <stop offset="100%" stop-color="#00f2ff"></stop>
+                </linearGradient>
+                <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
+                  <feMerge>
+                    <feMergeNode in="blur"></feMergeNode>
+                    <feMergeNode in="SourceGraphic"></feMergeNode>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- 木魚外殼立體陰影與底座 -->
+              <ellipse cx="100" cy="118" rx="84" ry="68" fill="#050302" opacity="0.6"></ellipse>
+              
+              <!-- 木魚主體形狀 -->
+              <path d="M100 32C52 32 18 68 18 114C18 152 48 174 95 174C148 174 182 146 182 110C182 66 148 32 100 32Z" fill="url(#muyuBodyGrad)" stroke="#fbbf24" stroke-width="2.5" stroke-opacity="0.8"></path>
+              
+              <!-- 木魚內部開口 (音孔 / 魚嘴裂縫) -->
+              <path d="M38 128C56 142 86 146 114 140C128 137 142 129 152 118C142 120 120 124 100 120C78 116 54 112 38 128Z" fill="#070503" stroke="#f59e0b" stroke-width="1.8"></path>
+
+              <!-- 科技電路發光紋路 (Cyber Circuit Grooves) -->
+              <path d="M45 80C65 58 110 52 145 68" stroke="url(#cyberCircuitGrad)" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 6" filter="url(#neonGlow)"></path>
+              <path d="M60 98C82 82 118 84 140 96" stroke="url(#cyberCircuitGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.8"></path>
+              
+              <!-- 中央科技法陣 / 晶片核心蓮花印記 -->
+              <circle cx="100" cy="92" r="16" fill="#120c08" stroke="#fbbf24" stroke-width="1.8" filter="url(#neonGlow)"></circle>
+              <circle cx="100" cy="92" r="8" fill="#fbbf24" opacity="0.3"></circle>
+              <!-- 萬字/科技核心線條 -->
+              <path d="M96 92H104M100 88V96M96 88V90M104 94V96" stroke="#fbbf24" stroke-width="1.6" stroke-linecap="round"></path>
+
+              <!-- 魚眼發光感測器 -->
+              <circle cx="148" cy="90" r="7" fill="#00f2ff" filter="url(#neonGlow)"></circle>
+              <circle cx="148" cy="90" r="3" fill="#ffffff"></circle>
+
+              <!-- 木魚頂部繫繩扣環 -->
+              <path d="M94 30C94 22 106 22 106 30" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 輔助功德功能：自動誦經、靈籤解密、重設功德 -->
+        <div class="w-full grid grid-cols-2 sm:grid-cols-3 gap-2.5 mt-2">
+          
+          <!-- 自動誦經 (自動敲擊開關) -->
+          <button id="autoTapBtn" onclick="toggleAutoTap()" class="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-700/60 bg-slate-900/40 hover:border-amber-400/50 hover:bg-slate-800/40 transition-all text-xs font-medium cursor-pointer">
+            <span class="text-base mb-1">⚡</span>
+            <span class="text-slate-200">自動敲擊</span>
+            <span id="autoTapStatus" class="text-[10px] text-slate-400 mt-0.5">未啟動</span>
+          </button>
+
+          <!-- 今日賽博靈籤 (抽籤開示) -->
+          <button onclick="drawFortune()" class="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-700/60 bg-slate-900/40 hover:border-purple-400/50 hover:bg-slate-800/40 transition-all text-xs font-medium cursor-pointer">
+            <span class="text-base mb-1">🔮</span>
+            <span class="text-slate-200">賽博靈籤</span>
+            <span class="text-[10px] text-purple-300 mt-0.5">測今日運勢</span>
+          </button>
+
+          <!-- 歸零重修 (清除記錄) -->
+          <button onclick="resetMerit()" class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-3 rounded-xl border border-slate-700/60 bg-slate-900/40 hover:border-rose-400/50 hover:bg-slate-800/40 transition-all text-xs font-medium cursor-pointer">
+            <span class="text-base mb-1">🔄</span>
+            <span class="text-slate-200">歸零重修</span>
+            <span class="text-[10px] text-rose-300 mt-0.5">清除功德紀錄</span>
+          </button>
+
+        </div>
+
+        <!-- 賽博靈籤顯示卡片 (抽籤後顯示) -->
+        <div id="fortuneCard" class="w-full mt-4 p-4 rounded-xl border border-purple-500/40 bg-purple-950/20 hidden transition-all duration-300">
+          <div class="flex items-center justify-between text-xs text-purple-300 font-bold mb-1">
+            <span id="fortuneLevel">✨ 上上大吉</span>
+            <button onclick="document.getElementById('fortuneCard').classList.add('hidden')" class="text-slate-400 hover:text-white">✕</button>
+          </div>
+          <p id="fortunePoem" class="text-sm text-slate-100 font-medium my-1">「今日代碼零 Bug，外送必定提早到達！」</p>
+          <p id="fortuneAdvice" class="text-xs text-purple-200/70">解曰：心無罣礙，敲擊百遍可保安康。</p>
+        </div>
+
+      </section>
+
+
+      <!-- ========================================================= -->
+      <!-- 【右側區塊：功能二 今天吃什麼？美食老虎機 (隨機決策區)】 -->
+      <!-- ========================================================= -->
+      <section class="rounded-2xl border border-cyan-500/30 bg-cyber-card/90 backdrop-blur-sm p-6 sm:p-8 flex flex-col items-center relative overflow-hidden box-glow-cyan">
+        
+        <!-- 背景裝飾青色霓虹光輪 -->
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- 區塊標題與狀態 -->
+        <div class="w-full flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="text-xs font-bold tracking-wider uppercase text-cyan-400">美食決策局 · FOOD SLOTS</span>
+          </div>
+          <span class="text-xs px-2.5 py-1 rounded-md bg-cyan-500/10 border border-cyber-cyan/30 text-cyber-cyan font-medium">
+            告別選擇困難
+          </span>
+        </div>
+
+        <!-- 老虎機標題與副標題 -->
+        <div class="text-center my-2">
+          <p class="text-xs uppercase tracking-widest text-slate-400 font-medium mb-1">命運的美食指引 · RANDOM SELECTOR</p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center gap-2">
+            <span>今天吃什麼？</span>
+            <span class="text-cyber-cyan glow-cyan">老虎機</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">極速滾動 1.8 秒 · 宇宙演算法為你精挑細選</p>
+        </div>
+
+        <!-- 加權切換器 (天氣過濾器：外面下大雨) -->
+        <div id="rainToggleBox" class="w-full my-4 p-3.5 rounded-xl border border-slate-700/60 bg-slate-900/50 flex items-center justify-between gap-3 rain-indicator transition-all">
+          <div class="flex items-center gap-3">
+            <div id="rainIconBadge" class="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-lg">
+              🌧️
+            </div>
+            <div>
+              <div class="text-sm font-bold text-slate-100 flex items-center gap-1.5">
+                <span>外面下大雨</span>
+                <span id="rainWeightTag" class="text-[11px] px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 font-normal">加權 2x</span>
+              </div>
+              <p class="text-xs text-slate-400">提高「麥當勞、便利商店、肯德基、披薩外送」等外送熱門機率</p>
+            </div>
+          </div>
+
+          <!-- iOS / 科技風 Toggle Switch 開關 -->
+          <label class="relative inline-flex items-center cursor-pointer select-none">
+            <input type="checkbox" id="rainFilterToggle" onchange="toggleRainFilter()" class="sr-only peer">
+            <div class="w-12 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyber-rain peer-checked:after:bg-white shadow-inner"></div>
+          </label>
+        </div>
+
+        <!-- 老虎機滾動視窗核心 (Slot Machine Viewport) -->
+        <div class="w-full my-4">
+          <div class="slot-viewport border-2 border-cyber-cyan/40">
+            <!-- 中心準星瞄準線 -->
+            <div class="slot-crosshair flex items-center justify-between px-3">
+              <span class="text-cyber-cyan text-xs font-tech opacity-60">◀ TARGET</span>
+              <span class="text-cyber-cyan text-xs font-tech opacity-60">TARGET ▶</span>
+            </div>
+
+            <!-- 老虎機滾輪內容 (由 JS 動態生成滾動項目) -->
+            <div id="slotReel" class="slot-reel flex flex-col items-center">
+              <!-- 初始預設顯示卡片 -->
+              <div class="h-[140px] flex flex-col items-center justify-center w-full px-4 text-center">
+                <span class="text-4xl mb-1">🎰</span>
+                <span class="text-lg font-bold text-slate-200">點擊下方按鈕開始</span>
+                <span id="slotPlaceholderCount" class="text-xs text-slate-400">25 款經典美味待命中</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 老虎機控制按鈕：開始決定 -->
+        <div class="w-full flex flex-col items-center gap-3 my-2">
+          <button id="spinBtn" onclick="startSpinFood()" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 active:scale-[0.98] text-white font-bold text-base sm:text-lg tracking-wider uppercase transition-all shadow-[0_0_25px_rgba(0,242,255,0.4)] hover:shadow-[0_0_35px_rgba(0,242,255,0.6)] cursor-pointer flex items-center justify-center gap-2">
+            <span class="text-xl">🚀</span>
+            <span>開始決定今天吃什麼</span>
+          </button>
+        </div>
+
+        <!-- 決定結果展示卡片 (滾動完成後浮現) -->
+        <div id="resultCard" class="w-full mt-3 p-4 rounded-xl border border-cyber-cyan/50 bg-cyan-950/20 hidden transition-all duration-300 text-center">
+          <p class="text-xs text-cyber-cyan font-bold tracking-widest uppercase">本日天選美饌 · TODAY'S DESTINY</p>
+          <div class="flex items-center justify-center gap-2 my-2">
+            <span id="resultEmoji" class="text-3xl">🍲</span>
+            <span id="resultTitle" class="text-2xl font-black text-white glow-cyan">小火鍋</span>
+          </div>
+          <p id="resultQuote" class="text-xs text-slate-300">「熱氣騰騰的小火鍋，最適合暖胃暖心！」</p>
+          <div id="resultRainBonusTag" class="mt-2 inline-block text-[11px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/30 hidden">
+            🌧️ 雨天加權命中！不用出門也能吃飽飽
+          </div>
+        </div>
+
+        <!-- 美食清單與機率即時檢視 (摺疊面板) -->
+        <div class="w-full mt-4 border-t border-slate-800 pt-4">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <button onclick="toggleFoodListModal()" class="hover:text-cyber-cyan flex items-center gap-1 transition-colors cursor-pointer">
+              <span>📋</span>
+              <span>查看目前菜單庫 (<span id="foodCountSpan">25</span>)</span>
+            </button>
+            <button onclick="toggleProbabilityViewer()" class="hover:text-cyber-cyan flex items-center gap-1 transition-colors cursor-pointer">
+              <span>📊</span>
+              <span>查看即時中獎機率</span>
+            </button>
+          </div>
+
+          <!-- 即時機率展開表 (驗證下雨天 2 倍加權效果) -->
+          <div id="probabilityViewer" class="mt-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800 hidden text-xs">
+            <div class="flex items-center justify-between font-bold text-slate-300 pb-2 border-b border-slate-800">
+              <span>美食項目</span>
+              <span>當前權重 / 機率</span>
+            </div>
+            <div id="probabilityList" class="mt-2 space-y-1.5 max-h-40 overflow-y-auto pr-1">
+              <!-- 由 JS 即時計算各項目機率並渲染 -->
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- ==================== 頁尾資訊與特色說明 ==================== -->
+    <footer class="mt-12 pt-6 border-t border-slate-800/80 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 font-medium">賽博木魚 &amp; 美食隨機決定器</span>
+        <span>·</span>
+        <span>單一檔案純前端架構 (HTML + CSS + Web Audio API)</span>
+      </div>
+      <div class="text-slate-400">
+        功德資料自動保存於 LocalStorage · 無需聯網隨時紓壓
+      </div>
+    </footer>
+  </main>
+
+  <!-- ==================== 自訂菜單管理彈跳視窗 (Modal) ==================== -->
+  <div id="foodListModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-cyber-card border border-cyber-border rounded-2xl max-w-md w-full p-6 box-glow-cyan">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>🍴</span>
+          <span>自訂美食老虎機名單</span>
+        </h3>
+        <button onclick="toggleFoodListModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+      <p class="text-xs text-slate-400 mb-3">已豐富收錄 <span id="modalTotalCount" class="text-cyber-cyan font-bold">25</span> 款熱門經典餐點，你也可以自由新增或移除個人偏好！</p>
+
+      <!-- 分類快篩按鈕列 -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 text-xs scrollbar-none">
+        <button id="catBtn-all" onclick="filterModalCategory('all')" class="cat-filter-btn px-2.5 py-1 rounded-md bg-cyber-cyan text-slate-950 font-bold shrink-0 cursor-pointer">全部 (<span id="catCount-all">25</span>)</button>
+        <button id="catBtn-台味經典" onclick="filterModalCategory('台味經典')" class="cat-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 hover:text-white shrink-0 cursor-pointer">台味經典</button>
+        <button id="catBtn-速食外送" onclick="filterModalCategory('速食外送')" class="cat-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 hover:text-white shrink-0 cursor-pointer">速食外送 🌧️</button>
+        <button id="catBtn-日韓異國" onclick="filterModalCategory('日韓異國')" class="cat-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 hover:text-white shrink-0 cursor-pointer">日韓異國</button>
+        <button id="catBtn-暖胃宵夜" onclick="filterModalCategory('暖胃宵夜')" class="cat-filter-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 hover:text-white shrink-0 cursor-pointer">暖胃宵夜</button>
+      </div>
+
+      <!-- 新增美食輸入框 -->
+      <div class="flex gap-2 mb-3">
+        <input type="text" id="newFoodInput" placeholder="輸入美食名稱 (例如: 韓式石鍋拌飯)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyber-cyan" maxlength="15">
+        <button onclick="addNewFoodItem()" class="px-4 py-2 bg-cyber-cyan text-slate-950 font-bold text-xs rounded-lg hover:bg-cyan-300 transition-colors cursor-pointer shrink-0">新增</button>
+      </div>
+
+      <!-- 目前美食標籤列表 -->
+      <div id="foodTagsContainer" class="max-h-60 overflow-y-auto flex flex-wrap gap-2 py-2 pr-1">
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🧋</span>
+          <span class="font-medium">珍奶</span>
+          
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(0)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍚</span>
+          <span class="font-medium">滷肉飯</span>
+          
+          <span class="text-[10px] text-slate-500">· 台味經典</span>
+          <button onclick="removeFoodItem(1)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍲</span>
+          <span class="font-medium">小火鍋</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(2)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍜</span>
+          <span class="font-medium">牛肉麵</span>
+          
+          <span class="text-[10px] text-slate-500">· 台味經典</span>
+          <button onclick="removeFoodItem(3)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍗</span>
+          <span class="font-medium">鹽酥雞</span>
+          
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(4)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍔</span>
+          <span class="font-medium">麥當勞</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 速食外送</span>
+          <button onclick="removeFoodItem(5)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍣</span>
+          <span class="font-medium">壽司</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(6)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍝</span>
+          <span class="font-medium">義大利麵</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(7)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🏪</span>
+          <span class="font-medium">便利商店</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 速食外送</span>
+          <button onclick="removeFoodItem(8)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🥟</span>
+          <span class="font-medium">水餃鍋貼</span>
+          
+          <span class="text-[10px] text-slate-500">· 台味經典</span>
+          <button onclick="removeFoodItem(9)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🥩</span>
+          <span class="font-medium">台式鐵板燒</span>
+          
+          <span class="text-[10px] text-slate-500">· 台味經典</span>
+          <button onclick="removeFoodItem(10)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍲</span>
+          <span class="font-medium">傳統麻油雞</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(11)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🥞</span>
+          <span class="font-medium">豆漿蛋餅油條</span>
+          
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(12)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍗</span>
+          <span class="font-medium">肯德基</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 速食外送</span>
+          <button onclick="removeFoodItem(13)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍕</span>
+          <span class="font-medium">披薩外送</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 速食外送</span>
+          <button onclick="removeFoodItem(14)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍔</span>
+          <span class="font-medium">漢堡王</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 速食外送</span>
+          <button onclick="removeFoodItem(15)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🌶️</span>
+          <span class="font-medium">麻辣燙外送</span>
+          <span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(16)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍛</span>
+          <span class="font-medium">日式咖哩飯</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(17)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍱</span>
+          <span class="font-medium">炙燒燒肉丼</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(18)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍗</span>
+          <span class="font-medium">韓式炸雞</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(19)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🥢</span>
+          <span class="font-medium">港式燒臘飯</span>
+          
+          <span class="text-[10px] text-slate-500">· 台味經典</span>
+          <button onclick="removeFoodItem(20)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🥘</span>
+          <span class="font-medium">泰式打拋豬</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(21)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍜</span>
+          <span class="font-medium">越南牛肉河粉</span>
+          
+          <span class="text-[10px] text-slate-500">· 日韓異國</span>
+          <button onclick="removeFoodItem(22)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🥗</span>
+          <span class="font-medium">健康舒肥餐盒</span>
+          
+          <span class="text-[10px] text-slate-500">· 台味經典</span>
+          <button onclick="removeFoodItem(23)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>🍢</span>
+          <span class="font-medium">居酒屋串燒</span>
+          
+          <span class="text-[10px] text-slate-500">· 暖胃宵夜</span>
+          <button onclick="removeFoodItem(24)" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-between items-center pt-3 border-t border-slate-800">
+        <button onclick="resetDefaultFoods()" class="text-xs text-rose-400 hover:underline cursor-pointer">重設為 25 款完整預設菜單</button>
+        <button onclick="toggleFoodListModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs rounded-lg cursor-pointer">完成</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- 【JavaScript 核心邏輯腳本】 -->
+  <!-- 包含：Web Audio API 音效引擎、賽博木魚、浮動粒子、老虎機滾輪與天氣加權隨機演算法 -->
+  <!-- ========================================================= -->
+  <script>
+    /**
+     * @license
+     * Cyber Merit & Food Decider Web App
+     * 純前端單一檔案架構 (HTML/CSS/JS)
+     */
+
+    /* ==========================================
+     * 1. 系統狀態與資料儲存 (State Management)
+     * ========================================== */
+    const STATE = {
+      merit: parseInt(localStorage.getItem('cyber_merit_total') || '0', 10),
+      soundEnabled: true,
+      autoTapInterval: null,
+      isAutoTapping: false,
+      isSpinning: false,
+      rainFilterActive: false,
+      audioCtx: null,
+      // 豐富多元的美食資料庫 (涵蓋規格書 9 款 + 16 款熱門人氣美饌，共 25 款)
+      defaultFoods: [
+        // === 規格書核心 9 款 ===
+        { name: '珍奶', emoji: '🧋', category: '暖胃宵夜', isRainTarget: false, quote: '一杯在手，天下我有！珍珠香濃有嚼勁，心靈獲得滿滿救贖。' },
+        { name: '滷肉飯', emoji: '🍚', category: '台味經典', isRainTarget: false, quote: '油亮肥瘦相間的特製滷肉淋在熱騰騰白飯上，台味靈魂之最！' },
+        { name: '小火鍋', emoji: '🍲', category: '暖胃宵夜', isRainTarget: true, quote: '滾燙鮮甜的湯底配上豐富肉片青菜，雨天暖胃最佳首選！' },
+        { name: '牛肉麵', emoji: '🍜', category: '台味經典', isRainTarget: false, quote: '濃郁紅燒牛骨高湯與軟嫩大塊牛腱心，每一口都是幸福！' },
+        { name: '鹽酥雞', emoji: '🍗', category: '暖胃宵夜', isRainTarget: false, quote: '炸九層塔與蒜香酥脆炸物，香氣撲鼻，今晚徹底放縱！' },
+        { name: '麥當勞', emoji: '🍔', category: '速食外送', isRainTarget: true, quote: '金黃酥脆的剛炸薯條與大麥克，外送必點的快樂源泉！' },
+        { name: '壽司', emoji: '🍣', category: '日韓異國', isRainTarget: false, quote: '酸甜醋飯搭配極鮮生魚片與炙燒鮭魚，清爽精緻無負擔！' },
+        { name: '義大利麵', emoji: '🍝', category: '日韓異國', isRainTarget: false, quote: '濃郁奶油白醬或經典蕃茄肉醬，吸飽醬汁的彈牙麵條！' },
+        { name: '便利商店', emoji: '🏪', category: '速食外送', isRainTarget: true, quote: '7-11 / 全家微波鮮食應有盡有，方便快速永不踩雷！' },
+
+        // === 人氣台味經典 ===
+        { name: '水餃鍋貼', emoji: '🥟', category: '台味經典', isRainTarget: false, quote: '金黃焦脆的冰花鍋貼與爆汁鮮肉水餃，蘸上蒜蓉辣醬油絕配！' },
+        { name: '台式鐵板燒', emoji: '🥩', category: '台味經典', isRainTarget: false, quote: '大火現炒黑胡椒牛柳、奶油高麗菜與爽脆豆芽，白飯殺手！' },
+        { name: '傳統麻油雞', emoji: '🍲', category: '暖胃宵夜', isRainTarget: true, quote: '老薑黑麻油米酒燉土雞，吸滿濃郁湯汁的手工麵線暖徹身心！' },
+        { name: '豆漿蛋餅油條', emoji: '🥞', category: '暖胃宵夜', isRainTarget: false, quote: '手工酥皮蛋餅沾甜辣醬，配上一碗香濃熱豆漿，深夜靈魂慰藉！' },
+
+        // === 熱門速食外送 (雨天高機率加權) ===
+        { name: '肯德基', emoji: '🍗', category: '速食外送', isRainTarget: true, quote: '香酥多汁的咔啦脆雞配剛出爐的原味蛋撻，雨天外送超搶手！' },
+        { name: '披薩外送', emoji: '🍕', category: '速食外送', isRainTarget: true, quote: '熱呼呼拉絲芝心厚切披薩，下雨天宅家追劇聚會無敵救星！' },
+        { name: '漢堡王', emoji: '🍔', category: '速食外送', isRainTarget: true, quote: '火烤純牛肉華堡與酥脆洋蔥圈，炭火香氣飽足感滿分！' },
+        { name: '麻辣燙外送', emoji: '🌶️', category: '暖胃宵夜', isRainTarget: true, quote: '香麻鮮辣高湯與吸汁油條豆腐，吃完全身冒汗大呼過癮！' },
+
+        // === 日韓異國風潮 ===
+        { name: '日式咖哩飯', emoji: '🍛', category: '日韓異國', isRainTarget: false, quote: '慢火熬煮的香濃日式甘口咖哩搭配厚切炸豬排，極致滿足！' },
+        { name: '炙燒燒肉丼', emoji: '🍱', category: '日韓異國', isRainTarget: false, quote: '大火直烤噴香雪花牛淋上甜鹹醬汁，肉食主義者的大歡喜！' },
+        { name: '韓式炸雞', emoji: '🍗', category: '日韓異國', isRainTarget: false, quote: '甜辣韓式洋釀醬裹滿酥脆雞塊，配醃蘿蔔與可樂超銷魂！' },
+        { name: '港式燒臘飯', emoji: '🥢', category: '台味經典', isRainTarget: false, quote: '明爐脆皮烤鴨、蜜汁叉燒與油雞三寶飯，淋上特製油蔥香絕了！' },
+        { name: '泰式打拋豬', emoji: '🥘', category: '日韓異國', isRainTarget: false, quote: '酸辣辛香九層塔打拋豬蓋飯加一顆流心半熟蛋，食慾大開！' },
+        { name: '越南牛肉河粉', emoji: '🍜', category: '日韓異國', isRainTarget: false, quote: '清甜牛骨高湯淋在生牛肉薄片上，九層塔與生辣椒香氣撲鼻！' },
+        { name: '健康舒肥餐盒', emoji: '🥗', category: '台味經典', isRainTarget: false, quote: '嫩煎舒肥雞胸肉配健康紫米與彩椒溏心蛋，清爽低卡零負擔！' },
+        { name: '居酒屋串燒', emoji: '🍢', category: '暖胃宵夜', isRainTarget: false, quote: '鹽烤雞肉蔥串與炭香明太子烤飯糰，犒賞今日辛勞的自己！' }
+      ],
+      currentModalFilter: 'all',
+      foods: []
+    };
+
+    // 從 LocalStorage 載入自訂菜單 (若為舊版 9 款則自動無縫升級為豐富的 25 款)
+    const storedFoods = localStorage.getItem('cyber_foods_list');
+    if (storedFoods) {
+      try {
+        const parsed = JSON.parse(storedFoods);
+        if (Array.isArray(parsed) && parsed.length <= 9) {
+          STATE.foods = [...STATE.defaultFoods];
+          localStorage.setItem('cyber_foods_list', JSON.stringify(STATE.foods));
+        } else {
+          STATE.foods = parsed;
+        }
+      } catch (e) {
+        STATE.foods = [...STATE.defaultFoods];
+      }
+    } else {
+      STATE.foods = [...STATE.defaultFoods];
+    }
+
+    /* ==========================================
+     * 2. Web Audio API 免外部音檔合成引擎
+     * 使用物理建模合成「木魚敲擊共鳴聲」與「老虎機音效」
+     * 無需下載任何外部音效檔案，隨時隨地 100% 播放
+     * ========================================== */
+    function initAudioContext() {
+      if (!STATE.audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          STATE.audioCtx = new AudioContextClass();
+        }
+      }
+      if (STATE.audioCtx && STATE.audioCtx.state === 'suspended') {
+        STATE.audioCtx.resume();
+      }
+    }
+
+    /**
+     * 合成清脆木魚敲擊聲：
+     * 結合瞬態高頻敲擊 (Transients) 與帶通濾波中空中頻木箱共鳴 (Resonant Wood Cavity)
+     */
+    function playMuyuSound() {
+      if (!STATE.soundEnabled) return;
+      initAudioContext();
+      if (!STATE.audioCtx) return;
+
+      const ctx = STATE.audioCtx;
+      const now = ctx.currentTime;
+
+      // 產生微幅隨機音高偏移，讓每次連續快速敲擊具有真實木頭質感的微妙層次
+      const pitchOffset = (Math.random() - 0.5) * 40;
+      const baseFreq = 580 + pitchOffset;
+
+      // 1. 中空木盒共鳴振盪器
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      // 三角波具有較溫潤豐富的偶次諧波，極適合木質打擊樂器
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(baseFreq * 1.35, now);
+      // 快速滑頻模擬鼓槌擊打瞬間受力受壓
+      osc.frequency.exponentialRampToValueAtTime(baseFreq, now + 0.035);
+
+      // 帶通濾波器模擬木魚中空腔體
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(baseFreq, now);
+      filter.Q.setValueAtTime(6.5, now);
+
+      // 音量衰減包絡線 (Attack: 1ms, Fast Decay: 90ms)
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.85, now + 0.002);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.13);
+
+      // 2. 棒擊木頭表面的短暫敲擊聲 (Transient Click)
+      const clickOsc = ctx.createOscillator();
+      const clickGain = ctx.createGain();
+      clickOsc.type = 'sine';
+      clickOsc.frequency.setValueAtTime(1200, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(200, now + 0.02);
+
+      clickGain.gain.setValueAtTime(0.4, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+
+      clickOsc.connect(clickGain);
+      clickGain.connect(ctx.destination);
+
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.025);
+    }
+
+    /**
+     * 老虎機滾動卡嗒聲 (Tick Sound)
+     */
+    function playSlotTickSound(pitch = 440) {
+      if (!STATE.soundEnabled) return;
+      initAudioContext();
+      if (!STATE.audioCtx) return;
+
+      const ctx = STATE.audioCtx;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(pitch, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.035);
+    }
+
+    /**
+     * 中獎勝利和弦音效 (Fanfare Sound)
+     */
+    function playWinSound() {
+      if (!STATE.soundEnabled) return;
+      initAudioContext();
+      if (!STATE.audioCtx) return;
+
+      const ctx = STATE.audioCtx;
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, idx) => {
+        const now = ctx.currentTime + idx * 0.08;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.36);
+      });
+    }
+
+    // 音效開關切換
+    function toggleSound() {
+      STATE.soundEnabled = !STATE.soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      const text = document.getElementById('soundText');
+      if (STATE.soundEnabled) {
+        icon.textContent = '🔊';
+        text.textContent = '音效：開啟';
+        initAudioContext();
+      } else {
+        icon.textContent = '🔇';
+        text.textContent = '音效：靜音';
+      }
+    }
+
+
+    /* ==========================================
+     * 3. 賽博木魚核心互動功能 (功德 +1 與震動反饋)
+     * ========================================== */
+    const muyuButton = document.getElementById('muyuButton');
+    const meritDisplay = document.getElementById('meritCountDisplay');
+    const rankBadge = document.getElementById('rankBadge');
+
+    // 格式化數字千分位 (例如 12,345)
+    function formatNumber(num) {
+      return num.toLocaleString();
+    }
+
+    // 根據功德總量計算稱號境界
+    function updateRank(count) {
+      let title = '稱號：賽博小沙彌';
+      if (count >= 10000) title = '稱號：光纖如來 · 佛法無邊';
+      else if (count >= 3000) title = '稱號：賽博菩薩 · 功德圓滿';
+      else if (count >= 1000) title = '稱號：量子羅漢 · 諸妄皆空';
+      else if (count >= 300) title = '稱號：數位居士 · 福德深厚';
+      else if (count >= 50) title = '稱號：雲端行者 · 初窺妙門';
+      rankBadge.textContent = title;
+    }
+
+    // 敲擊木魚主事件處理
+    function hitMuyu(event) {
+      // 1. 播放木魚清脆音效
+      playMuyuSound();
+
+      // 2. 木魚圖示縮放震動動畫
+      muyuButton.classList.remove('muyu-active');
+      void muyuButton.offsetWidth; // 強制重繪觸發動畫
+      muyuButton.classList.add('muyu-active');
+
+      // 3. 隨機暴擊機制 (12% 機率觸發功德暴擊 +99，趣味彩蛋)
+      const isCrit = Math.random() < 0.12;
+      const addAmount = isCrit ? 99 : 1;
+      
+      STATE.merit += addAmount;
+      localStorage.setItem('cyber_merit_total', STATE.merit.toString());
+      meritDisplay.textContent = formatNumber(STATE.merit);
+      updateRank(STATE.merit);
+
+      // 4. 生成飄動「功德 +1」半透明金色粒子
+      spawnFloatingMerit(event, isCrit ? '功德暴擊 +99 🔥' : '功德 +1');
+    }
+
+    // 在木魚上方動態生成向上飄動後淡出的金色文字
+    function spawnFloatingMerit(event, text) {
+      const container = document.getElementById('muyuContainer');
+      const rect = container.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.className = 'floating-merit';
+      el.textContent = text;
+
+      // 計算點擊位置或置中位置
+      let clientX = rect.left + rect.width / 2;
+      let clientY = rect.top + rect.height / 3;
+
+      if (event && event.clientX) {
+        clientX = event.clientX;
+        clientY = event.clientY;
+      }
+
+      // 些許隨機水平偏移，讓連續點擊時的字體飄逸自然
+      const randomOffsetX = (Math.random() - 0.5) * 50;
+      el.style.left = `${clientX - rect.left + randomOffsetX - 25}px`;
+      el.style.top = `${clientY - rect.top - 40}px`;
+
+      if (text.includes('暴擊')) {
+        el.style.fontSize = '1.35rem';
+        el.style.color = '#fef08a';
+      } else {
+        el.style.fontSize = '1.1rem';
+      }
+
+      container.appendChild(el);
+
+      // 動畫結束後自 DOM 中自動移除
+      setTimeout(() => {
+        if (el.parentNode) {
+          el.parentNode.removeChild(el);
+        }
+      }, 950);
+    }
+
+    // 自動敲擊 (掛機誦經)
+    function toggleAutoTap() {
+      const btn = document.getElementById('autoTapBtn');
+      const status = document.getElementById('autoTapStatus');
+      
+      if (STATE.isAutoTapping) {
+        clearInterval(STATE.autoTapInterval);
+        STATE.isAutoTapping = false;
+        status.textContent = '未啟動';
+        status.classList.remove('text-amber-400');
+        status.classList.add('text-slate-400');
+        btn.classList.remove('border-amber-400', 'bg-amber-500/10');
+      } else {
+        STATE.isAutoTapping = true;
+        status.textContent = '掛機誦經中...';
+        status.classList.remove('text-slate-400');
+        status.classList.add('text-amber-400');
+        btn.classList.add('border-amber-400', 'bg-amber-500/10');
+
+        // 每 800ms 自動敲擊一次
+        STATE.autoTapInterval = setInterval(() => {
+          hitMuyu();
+        }, 800);
+      }
+    }
+
+    // 歸零功德記錄
+    function resetMerit() {
+      if (confirm('確定要歸零功德嗎？凡所有相，皆是虛妄。')) {
+        STATE.merit = 0;
+        localStorage.setItem('cyber_merit_total', '0');
+        meritDisplay.textContent = '0';
+        updateRank(0);
+      }
+    }
+
+    // 今日賽博靈籤題庫
+    const FORTUNES = [
+      { level: '✨ 上上大吉', poem: '今日代碼零 Bug，外送必定提早到達！', advice: '解曰：心無罣礙，敲擊百遍可保安康。' },
+      { level: '🌟 超吉籤', poem: '熱量皆被菩薩吸收，宵夜炸雞吃得心安理得。', advice: '解曰：宜珍奶半糖微冰，忌空腹焦慮。' },
+      { level: '☀️ 上吉籤', poem: '貴人如雲，外送平台隨機掉落免運券！', advice: '解曰：今日適合選擇小火鍋犒賞身心。' },
+      { level: '🍀 中吉籤', poem: '遇水則發，下雨天不用出門也能吃飽飽。', advice: '解曰：打開下雨開關，麥當勞直達家門。' },
+      { level: '🍵 平安吉', poem: '歲月靜好，牛肉麵香氣四溢飄香十里。', advice: '解曰：凡事順其自然，吃飽方有力氣前行。' }
+    ];
+
+    function drawFortune() {
+      playMuyuSound();
+      const card = document.getElementById('fortuneCard');
+      const f = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+      document.getElementById('fortuneLevel').textContent = f.level;
+      document.getElementById('fortunePoem').textContent = `「${f.poem}」`;
+      document.getElementById('fortuneAdvice').textContent = f.advice;
+      card.classList.remove('hidden');
+    }
+
+
+    /* ==========================================
+     * 4. 今天吃什麼？美食老虎機與加權演算法
+     * ========================================== */
+
+    /**
+     * 切換雨天加權過濾器：
+     * 當開啟時，「麥當勞」與「便利商店」的權重加倍 (2x)
+     */
+    function toggleRainFilter() {
+      const toggle = document.getElementById('rainFilterToggle');
+      const box = document.getElementById('rainToggleBox');
+      const badge = document.getElementById('rainWeightTag');
+      STATE.rainFilterActive = toggle.checked;
+
+      if (STATE.rainFilterActive) {
+        box.classList.add('rain-active');
+        badge.classList.remove('bg-blue-500/20', 'text-blue-300');
+        badge.classList.add('bg-blue-500', 'text-white', 'font-bold');
+      } else {
+        box.classList.remove('rain-active');
+        badge.classList.remove('bg-blue-500', 'text-white', 'font-bold');
+        badge.classList.add('bg-blue-500/20', 'text-blue-300');
+      }
+
+      // 若目前有機率面板開啟，即時刷新百分比顯示
+      renderProbabilityList();
+    }
+
+    /**
+     * 加權隨機選擇演算法 (Weighted Random Selection):
+     * 一般項目權重 = 1
+     * 若雨天開啟且為 isRainTarget (麥當勞、便利商店)，權重 = 2
+     */
+    function getWeightedRandomFood() {
+      const pool = STATE.foods;
+      if (!pool || pool.length === 0) return null;
+
+      // 建立加權比重陣列
+      const weights = pool.map(item => {
+        if (STATE.rainFilterActive && item.isRainTarget) {
+          return 2.0; // 提高為 2 倍抽中機率
+        }
+        return 1.0;
+      });
+
+      const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+      let randomVal = Math.random() * totalWeight;
+
+      for (let i = 0; i < pool.length; i++) {
+        if (randomVal < weights[i]) {
+          return { item: pool[i], index: i, weight: weights[i], totalWeight };
+        }
+        randomVal -= weights[i];
+      }
+
+      return { item: pool[pool.length - 1], index: pool.length - 1, weight: weights[pool.length - 1], totalWeight };
+    }
+
+    /**
+     * 啟動美食老虎機隨機滾動效果：
+     * - 極速滾動約 1.8 秒
+     * - 物理減速 (Ease-out 漸慢後鎖定中獎項目)
+     * - 鎖定後播放歡呼中獎音效與卡片展示
+     */
+    function startSpinFood() {
+      if (STATE.isSpinning) return;
+      if (STATE.foods.length === 0) {
+        alert('請先在菜單庫中新增至少一項美食！');
+        return;
+      }
+
+      STATE.isSpinning = true;
+      initAudioContext();
+
+      const spinBtn = document.getElementById('spinBtn');
+      const reel = document.getElementById('slotReel');
+      const resultCard = document.getElementById('resultCard');
+
+      // 禁用按鈕與重置卡片
+      spinBtn.disabled = true;
+      spinBtn.classList.add('opacity-60', 'cursor-not-allowed');
+      resultCard.classList.add('hidden');
+
+      // 1. 根據加權演算法預先抽取本次中獎美食
+      const outcome = getWeightedRandomFood();
+      const targetFood = outcome.item;
+
+      // 2. 構建老虎機滾動長條清單 (重複隨機拼裝 25~30 個節點以達成超高速滾筒視覺)
+      const rollSequence = [];
+      const totalRounds = 26; // 滾動數量
+
+      for (let i = 0; i < totalRounds - 1; i++) {
+        const randItem = STATE.foods[Math.floor(Math.random() * STATE.foods.length)];
+        rollSequence.push(randItem);
+      }
+      // 最後一個節點精準鎖定在天選美食！
+      rollSequence.push(targetFood);
+
+      // 渲染老虎機軌道 DOM (每個項目高 140px，與視窗 viewport 一致居中)
+      reel.innerHTML = rollSequence.map(item => `
+        <div class="h-[140px] flex flex-col items-center justify-center w-full px-4 text-center shrink-0">
+          <span class="text-5xl mb-1 filter drop-shadow-md">${item.emoji || '🍴'}</span>
+          <span class="text-xl font-black text-white tracking-wide">${item.name}</span>
+          <span class="text-xs text-cyber-cyan/80 mt-0.5">${item.isRainTarget && STATE.rainFilterActive ? '🌧️ 雨天 2x 推薦' : '熱門美味'}</span>
+        </div>
+      `).join('');
+
+      // 重設滾動條位置
+      reel.style.transition = 'none';
+      reel.style.transform = 'translateY(0px)';
+
+      // 3. 執行極速滾動並減速動畫 (持續時間約 1.8 秒)
+      const itemHeight = 140;
+      const targetTranslateY = -(rollSequence.length - 1) * itemHeight;
+
+      // 滾動計時器音效 (產生卡嗒嗒嗒節奏，隨速度遞減)
+      let tickInterval = 65;
+      let tickTimer = null;
+      const playSpinTicks = () => {
+        playSlotTickSound(300 + Math.random() * 200);
+        tickInterval = Math.min(tickInterval * 1.09, 350); // 逐漸拉長間隔模擬減速
+        if (STATE.isSpinning) {
+          tickTimer = setTimeout(playSpinTicks, tickInterval);
+        }
+      };
+      playSpinTicks();
+
+      // 延遲 20ms 後套用平滑物理減速貝茲曲線 (Ease-out)
+      setTimeout(() => {
+        reel.style.transition = 'transform 1.8s cubic-bezier(0.12, 0.8, 0.2, 1)';
+        reel.style.transform = `translateY(${targetTranslateY}px)`;
+      }, 20);
+
+      // 4. 滾動完成結算 (1.85 秒後定格)
+      setTimeout(() => {
+        STATE.isSpinning = false;
+        clearTimeout(tickTimer);
+        spinBtn.disabled = false;
+        spinBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+
+        // 播放中獎音效
+        playWinSound();
+
+        // 顯示結果卡片
+        document.getElementById('resultEmoji').textContent = targetFood.emoji || '🍴';
+        document.getElementById('resultTitle').textContent = targetFood.name;
+        document.getElementById('resultQuote').textContent = `「${targetFood.quote || '命運之選，好好享用美味吧！'}」`;
+
+        const rainBonusTag = document.getElementById('resultRainBonusTag');
+        if (STATE.rainFilterActive && targetFood.isRainTarget) {
+          rainBonusTag.classList.remove('hidden');
+        } else {
+          rainBonusTag.classList.add('hidden');
+        }
+
+        resultCard.classList.remove('hidden');
+      }, 1850);
+    }
+
+
+    /* ==========================================
+     * 5. 菜單管理與實時機率檢視模組
+     * ========================================== */
+
+    // 展開/收合即時中獎機率面板
+    function toggleProbabilityViewer() {
+      const panel = document.getElementById('probabilityViewer');
+      const isHidden = panel.classList.contains('hidden');
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        renderProbabilityList();
+      } else {
+        panel.classList.add('hidden');
+      }
+    }
+
+    // 計算並繪製各美食機率
+    function renderProbabilityList() {
+      const listEl = document.getElementById('probabilityList');
+      if (!listEl) return;
+
+      const pool = STATE.foods;
+      const weights = pool.map(item => (STATE.rainFilterActive && item.isRainTarget ? 2.0 : 1.0));
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+      listEl.innerHTML = pool.map((item, i) => {
+        const percent = ((weights[i] / totalWeight) * 100).toFixed(1);
+        const isBoosted = STATE.rainFilterActive && item.isRainTarget;
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-slate-800/60 last:border-none">
+            <span class="flex items-center gap-1.5 ${isBoosted ? 'text-blue-300 font-bold' : 'text-slate-300'}">
+              <span>${item.emoji || '🍴'}</span>
+              <span>${item.name}</span>
+              ${isBoosted ? '<span class="text-[10px] px-1 rounded bg-blue-500/20 text-blue-300">2x 雨天加權</span>' : ''}
+            </span>
+            <span class="font-tech ${isBoosted ? 'text-blue-400 font-bold' : 'text-slate-400'}">${percent}%</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 開關自訂菜單彈窗
+    function toggleFoodListModal() {
+      const modal = document.getElementById('foodListModal');
+      const isHidden = modal.classList.contains('hidden');
+      if (isHidden) {
+        modal.classList.remove('hidden');
+        renderFoodTags();
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // 切換分類快篩 (全部、台味經典、速食外送、日韓異國、暖胃宵夜)
+    function filterModalCategory(cat) {
+      STATE.currentModalFilter = cat;
+      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-cyber-cyan', 'text-slate-950', 'font-bold');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      const activeBtn = document.getElementById(`catBtn-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+        activeBtn.classList.add('bg-cyber-cyan', 'text-slate-950', 'font-bold');
+      }
+      renderFoodTags();
+    }
+
+    // 渲染自訂管理標籤清單
+    function renderFoodTags() {
+      const container = document.getElementById('foodTagsContainer');
+      const countSpan = document.getElementById('foodCountSpan');
+      const modalCount = document.getElementById('modalTotalCount');
+      const catCountAll = document.getElementById('catCount-all');
+      const slotCount = document.getElementById('slotPlaceholderCount');
+
+      if (countSpan) countSpan.textContent = STATE.foods.length.toString();
+      if (modalCount) modalCount.textContent = STATE.foods.length.toString();
+      if (catCountAll) catCountAll.textContent = STATE.foods.length.toString();
+      if (slotCount) slotCount.textContent = `${STATE.foods.length} 款經典美味待命中`;
+
+      const filter = STATE.currentModalFilter || 'all';
+      const filtered = STATE.foods.map((food, realIdx) => ({ food, realIdx }))
+        .filter(({ food }) => {
+          if (filter === 'all') return true;
+          return food.category === filter;
+        });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="w-full text-center py-6 text-xs text-slate-500">
+            此分類目前沒有菜單項目，可於上方輸入欄新增！
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(({ food, realIdx }) => `
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs text-slate-200 hover:border-cyber-cyan/40 transition-colors">
+          <span>${food.emoji || '🍴'}</span>
+          <span class="font-medium">${food.name}</span>
+          ${food.isRainTarget ? '<span class="text-[10px] text-blue-400 font-normal" title="雨天 2x 加權品項">🌧️2x</span>' : ''}
+          ${food.category ? `<span class="text-[10px] text-slate-500">· ${food.category}</span>` : ''}
+          <button onclick="removeFoodItem(${realIdx})" class="text-slate-500 hover:text-rose-400 ml-1 font-bold cursor-pointer" title="移除此項">×</button>
+        </div>
+      `).join('');
+    }
+
+    // 新增自訂美食
+    function addNewFoodItem() {
+      const input = document.getElementById('newFoodInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const category = (STATE.currentModalFilter && STATE.currentModalFilter !== 'all') 
+        ? STATE.currentModalFilter 
+        : '自訂美食';
+
+      STATE.foods.push({
+        name: val,
+        emoji: '🍱',
+        category: category,
+        isRainTarget: false,
+        quote: `熱騰騰的${val}，今天就決定吃這個犒賞自己！`
+      });
+
+      localStorage.setItem('cyber_foods_list', JSON.stringify(STATE.foods));
+      input.value = '';
+      renderFoodTags();
+      renderProbabilityList();
+    }
+
+    // 刪除美食項目
+    function removeFoodItem(idx) {
+      if (STATE.foods.length <= 1) {
+        alert('請保留至少一項美食以供老虎機抽取！');
+        return;
+      }
+      STATE.foods.splice(idx, 1);
+      localStorage.setItem('cyber_foods_list', JSON.stringify(STATE.foods));
+      renderFoodTags();
+      renderProbabilityList();
+    }
+
+    // 還原為預設 25 款完整美食
+    function resetDefaultFoods() {
+      STATE.foods = [...STATE.defaultFoods];
+      localStorage.removeItem('cyber_foods_list');
+      STATE.currentModalFilter = 'all';
+      filterModalCategory('all');
+      renderFoodTags();
+      renderProbabilityList();
+    }
+
+
+    /* ==========================================
+     * 6. 單一檔案導出與一鍵複製功能
+     * 專為 Vibe Coding 作業繳交與 GitHub Pages 部署設計
+     * ========================================== */
+
+    // 複製整個 HTML 檔案的源碼到剪貼簿
+    function copySingleFileSource() {
+      const fullHtml = document.documentElement.outerHTML;
+      const doctype = '<!DOCTYPE html>\n';
+      const completeCode = doctype + fullHtml;
+
+      navigator.clipboard.writeText(completeCode).then(() => {
+        alert('✅ 已成功複製完整的單一檔案 index.html 程式碼至剪貼簿！可直接貼上並上傳至 GitHub Pages。');
+      }).catch(() => {
+        alert('複製失敗，請手動全選檔案原始碼複製。');
+      });
+    }
+
+    // 下載 index.html 檔案
+    function downloadSingleFileHtml() {
+      const fullHtml = document.documentElement.outerHTML;
+      const doctype = '<!DOCTYPE html>\n';
+      const blob = new Blob([doctype + fullHtml], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+
+    /* ==========================================
+     * 7. 頁面初始化與掛載
+     * ========================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      // 載入當前功德顯示
+      meritDisplay.textContent = formatNumber(STATE.merit);
+      updateRank(STATE.merit);
+
+      // 初始化菜單數量指示器
+      const count = STATE.foods.length;
+      const foodCountSpan = document.getElementById('foodCountSpan');
+      const slotPlaceholderCount = document.getElementById('slotPlaceholderCount');
+      const modalTotalCount = document.getElementById('modalTotalCount');
+      const catCountAll = document.getElementById('catCount-all');
+
+      if (foodCountSpan) foodCountSpan.textContent = count.toString();
+      if (slotPlaceholderCount) slotPlaceholderCount.textContent = `${count} 款經典美味待命中`;
+      if (modalTotalCount) modalTotalCount.textContent = count.toString();
+      if (catCountAll) catCountAll.textContent = count.toString();
+
+      // 在使用者初次與網頁互動時啟動 AudioContext (符合瀏覽器 Autoplay 規範)
+      const unlockAudio = () => {
+        initAudioContext();
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('keydown', unlockAudio);
+        window.removeEventListener('touchstart', unlockAudio);
+      };
+      window.addEventListener('click', unlockAudio);
+      window.addEventListener('keydown', unlockAudio);
+      window.addEventListener('touchstart', unlockAudio);
+    });
+  </script>
+
+
+
+<span id="PING_CONTENT_PUSH_NOTIFICATION" style="display: none;"></span></body></html>
